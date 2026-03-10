@@ -99,6 +99,7 @@
             btnReset.TabIndex = 6;
             btnReset.Text = "Reset";
             btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
             // 
             // timerPomodoro
             // 
@@ -118,7 +119,7 @@
             Controls.Add(textBoxRad);
             Controls.Add(labelRad);
             Name = "Form1";
-            Text = "Form1";
+            Text = "PomodoroApp";
             ResumeLayout(false);
             PerformLayout();
         }
