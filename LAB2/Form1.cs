@@ -1,3 +1,5 @@
+using System.Xml.Serialization;
+
 namespace LAB2
 {
     public partial class Form1 : Form
@@ -9,32 +11,30 @@ namespace LAB2
         public Form1()
         {
             InitializeComponent();
-            labelTimer.Text = "25:00";
+            textBoxRad.Text = "25";
+            textBoxOdmor.Text = "5";
+            secondsLeft = int.Parse(textBoxRad.Text) * 60;
+            labelRad.ForeColor = Color.Red;
         }
 
-        private void btnStartClick(object sender, EventArgs e)
+        private void btnStart_Click(object sender, EventArgs e)
         {
-            if (!isRunning)
-            {
-                if (secondsLeft == 0)
-                {
-                    int minutes = int.Parse(textBoxRad.Text);
-                    secondsLeft = minutes * 60;
-                }
-                timerPomodoro.Start();
-                isRunning = true;
-            }
-            else
-            {
-                timerPomodoro.Stop();
-                isRunning = false;
-            }
+            timerPomodoro.Start();
 
         }
 
-        private void btnResetClick(object sender, EventArgs e) {
-            
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+
         }
-        
+
+
+        private void timerPomodoro_Tick(object sender, EventArgs e)
+        {
+            int minutes = secondsLeft / 60;
+            labelTimer.Text = minutes.ToString() + ":" + (secondsLeft % 60).ToString();
+
+            secondsLeft--;
+        }
     }
 }

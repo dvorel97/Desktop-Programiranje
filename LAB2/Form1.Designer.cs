@@ -47,7 +47,6 @@
             labelRad.Size = new Size(27, 15);
             labelRad.TabIndex = 0;
             labelRad.Text = "Rad";
-            labelRad.Click += label1_Click;
             // 
             // textBoxRad
             // 
@@ -76,10 +75,11 @@
             // 
             labelTimer.AutoSize = true;
             labelTimer.Font = new Font("Segoe UI", 20F);
-            labelTimer.Location = new Point(108, 138);
+            labelTimer.Location = new Point(115, 108);
             labelTimer.Name = "labelTimer";
-            labelTimer.Size = new Size(0, 37);
+            labelTimer.Size = new Size(83, 37);
             labelTimer.TabIndex = 4;
+            labelTimer.Text = "25:00";
             // 
             // btnStart
             // 
@@ -89,6 +89,7 @@
             btnStart.TabIndex = 5;
             btnStart.Text = "Start / Stop";
             btnStart.UseVisualStyleBackColor = true;
+            btnStart.Click += btnStart_Click;
             // 
             // btnReset
             // 
@@ -98,6 +99,11 @@
             btnReset.TabIndex = 6;
             btnReset.Text = "Reset";
             btnReset.UseVisualStyleBackColor = true;
+            // 
+            // timerPomodoro
+            // 
+            timerPomodoro.Interval = 1;
+            timerPomodoro.Tick += timerPomodoro_Tick;
             // 
             // Form1
             // 
