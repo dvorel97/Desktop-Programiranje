@@ -1,20 +1,20 @@
 using System.Xml.Serialization;
 
+
 namespace LAB2
 {
     public partial class Form1 : Form
     {
-        int secondsLeft;
-        bool isWorkTime;
+        private Pomodoro pomodoro;
 
         public Form1()
         {
             InitializeComponent();
-            textBoxRad.Text = "25";
-            textBoxOdmor.Text = "5";
-            secondsLeft = int.Parse(textBoxRad.Text) * 60;
+            pomodoro = new Pomodoro();
+            textBoxRad.Text = pomodoro.WorkDuration.ToString();
+            textBoxOdmor.Text = pomodoro.RestDuration.ToString();
             labelRad.ForeColor = Color.Red;
-            isWorkTime = true;
+            labelTimer.Text = pomodoro.ToString();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -23,8 +23,6 @@ namespace LAB2
             {
                 timerPomodoro.Start();
                 btnStart.Text = "Stop";
-                
-                //dodatne funkcionalnosti
                 textBoxRad.Enabled = false;
                 textBoxOdmor.Enabled = false;
             }
@@ -32,8 +30,6 @@ namespace LAB2
             {
                 timerPomodoro.Stop();
                 btnStart.Text = "Start";
-
-                //dodatne funkcionalnosti
                 textBoxRad.Enabled = true;
                 textBoxOdmor.Enabled = true;
             }
@@ -43,46 +39,37 @@ namespace LAB2
         {
             timerPomodoro.Stop();
             btnStart.Text = "Start";
-            setTimerToWork();
+            pomodoro = new Pomodoro(
+                int.Parse(textBoxRad.Text), 
+                int.Parse(textBoxOdmor.Text));
+            labelTimer.Text = pomodoro.ToString();
+            labelRad.ForeColor=Color.Red;
+            labelOdmor.ForeColor=Color.Black;
         }
 
         private void timerPomodoro_Tick(object sender, EventArgs e)
         {
-            if (secondsLeft >= 0)
+            if (pomodoro.CurrentSeconds >= 0)
             {
-                setTimerLabel();
-                secondsLeft--;
+                labelTimer.Text = pomodoro.ToString();
+                pomodoro.CurrentSeconds--;
             }
             else
             {
-                if (isWorkTime)
+                if (pomodoro.WorkInProgress)
                 {
-                    secondsLeft = int.Parse(textBoxOdmor.Text) * 60;
+                    pomodoro.CurrentSeconds = Pomodoro.ConvertMinutesToSeconds(pomodoro.RestDuration);
+                    pomodoro.WorkInProgress = false;
                     labelRad.ForeColor = Color.Black;
                     labelOdmor.ForeColor = Color.Red;
-                    isWorkTime = false;
                 }
                 else {
-                    secondsLeft = int.Parse(textBoxRad.Text) * 60;
+                    pomodoro.CurrentSeconds = Pomodoro.ConvertMinutesToSeconds(pomodoro.WorkDuration);
+                    pomodoro.WorkInProgress = true;
                     labelRad.ForeColor = Color.Red;
                     labelOdmor.ForeColor = Color.Black;
-                    isWorkTime = true;
                 }
             }
-        }
-        private void setTimerToWork()
-        {
-            secondsLeft = int.Parse(textBoxRad.Text) * 60;
-            labelRad.ForeColor = Color.Red;
-            labelOdmor.ForeColor = Color.Black;
-            setTimerLabel();
-        }
-
-        private void setTimerLabel()
-        {
-            int minutes = secondsLeft / 60;
-            int seconds = secondsLeft % 60;
-            labelTimer.Text = minutes.ToString("D2") + ":" + seconds.ToString("D2");
         }
     }
 }
