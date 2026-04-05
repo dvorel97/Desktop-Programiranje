@@ -2,30 +2,27 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Zadaca
+namespace Zadaca.Items
 {
     public abstract class Consumable : IProduct
     {
         protected string name;
         protected decimal price;
-        protected int quantity;
+        protected double quantity;
         protected string measuringUnit;
-        protected int calories;
 
         public string Name => name;
         public decimal Price => price;
-        public int Calories => calories;
-        public int Quantity => quantity;
+        public double Quantity => quantity;
         public string MeasuringUnit => measuringUnit;
         public abstract string Category { get; }
 
-        protected Consumable(string name, decimal price, int calories, int quantity, string measurinUnit)
+        protected Consumable(string name, decimal price, double quantity, string measuringUnit)
         {
             this.name = name;
             this.price = price;
-            this.calories = calories;
             this.quantity = quantity;
-            this.measuringUnit = measurinUnit;
+            this.measuringUnit = measuringUnit;
         }
 
     }
