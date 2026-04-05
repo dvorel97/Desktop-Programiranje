@@ -9,7 +9,7 @@ namespace Zadaca
     {
         string Name { get; }
         decimal Price { get; }
-        int Quantity { get; }
+        double Quantity { get; }
         string MeasuringUnit { get; }
     }
 }
