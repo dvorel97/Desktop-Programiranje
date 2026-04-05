@@ -2,10 +2,12 @@ namespace Zadaca
 {
     public partial class Form1 : Form
     {
+        private Receipt receipt;
         public Form1()
         {
             InitializeComponent();
-            
+            visuals();
+            receipt = new Receipt();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -44,6 +46,23 @@ namespace Zadaca
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            this.receipt = new Receipt();
+        }
+
+        private void btnCheckout_Click(object sender, EventArgs e)
+        {
+            if (receipt.sum != 0)
+            {
+                MessageBox.Show(
+                    $"Naplata računa: \n{receipt.sum}€",
+                    "Naplata!",
+                    MessageBoxButtons.OK);
+                this.receipt = new Receipt();
+            }
         }
     }
 }

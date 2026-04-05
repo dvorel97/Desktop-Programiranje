@@ -7,7 +7,7 @@ namespace Zadaca
     public class Receipt
     {
         private List<IProduct> items = new();
-        private decimal sum;
+        public decimal sum;
         
         public Receipt()
         {

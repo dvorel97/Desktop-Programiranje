@@ -239,6 +239,7 @@
             btnNew.TabIndex = 9;
             btnNew.Text = "Novi račun";
             btnNew.UseVisualStyleBackColor = true;
+            btnNew.Click += btnNew_Click;
             // 
             // btnCheckout
             // 
@@ -248,6 +249,7 @@
             btnCheckout.TabIndex = 10;
             btnCheckout.Text = "Naplata";
             btnCheckout.UseVisualStyleBackColor = true;
+            btnCheckout.Click += btnCheckout_Click;
             // 
             // Form1
             // 
