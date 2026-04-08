@@ -30,13 +30,7 @@
         {
             lblHeader = new Label();
             groupBox1 = new GroupBox();
-            btnLatte = new Button();
-            btnCappucino = new Button();
-            btnEspresso = new Button();
             groupBox2 = new GroupBox();
-            btnFanta = new Button();
-            btnSprite = new Button();
-            btnCola = new Button();
             groupBox3 = new GroupBox();
             btnSweets = new Button();
             btnIceCream = new Button();
@@ -48,8 +42,6 @@
             lblSum = new Label();
             btnNew = new Button();
             btnCheckout = new Button();
-            groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
             SuspendLayout();
@@ -67,9 +59,6 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(btnLatte);
-            groupBox1.Controls.Add(btnCappucino);
-            groupBox1.Controls.Add(btnEspresso);
             groupBox1.Location = new Point(78, 145);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(871, 182);
@@ -78,71 +67,14 @@
             groupBox1.Text = "Kave";
             groupBox1.Enter += groupBox1_Enter;
             // 
-            // btnLatte
-            // 
-            btnLatte.Location = new Point(554, 46);
-            btnLatte.Name = "btnLatte";
-            btnLatte.Size = new Size(204, 105);
-            btnLatte.TabIndex = 2;
-            btnLatte.Text = "Latte";
-            btnLatte.UseVisualStyleBackColor = true;
-            // 
-            // btnCappucino
-            // 
-            btnCappucino.Location = new Point(304, 46);
-            btnCappucino.Name = "btnCappucino";
-            btnCappucino.Size = new Size(204, 105);
-            btnCappucino.TabIndex = 1;
-            btnCappucino.Text = "Cappucino";
-            btnCappucino.UseVisualStyleBackColor = true;
-            // 
-            // btnEspresso
-            // 
-            btnEspresso.Location = new Point(52, 46);
-            btnEspresso.Name = "btnEspresso";
-            btnEspresso.Size = new Size(204, 105);
-            btnEspresso.TabIndex = 0;
-            btnEspresso.Text = "Espresso";
-            btnEspresso.UseVisualStyleBackColor = true;
-            // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(btnFanta);
-            groupBox2.Controls.Add(btnSprite);
-            groupBox2.Controls.Add(btnCola);
             groupBox2.Location = new Point(78, 379);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(871, 206);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
             groupBox2.Text = "Bezalkoholna pića";
-            // 
-            // btnFanta
-            // 
-            btnFanta.Location = new Point(554, 58);
-            btnFanta.Name = "btnFanta";
-            btnFanta.Size = new Size(204, 105);
-            btnFanta.TabIndex = 3;
-            btnFanta.Text = "Fanta";
-            btnFanta.UseVisualStyleBackColor = true;
-            // 
-            // btnSprite
-            // 
-            btnSprite.Location = new Point(304, 58);
-            btnSprite.Name = "btnSprite";
-            btnSprite.Size = new Size(204, 105);
-            btnSprite.TabIndex = 2;
-            btnSprite.Text = "Sprite";
-            btnSprite.UseVisualStyleBackColor = true;
-            // 
-            // btnCola
-            // 
-            btnCola.Location = new Point(52, 58);
-            btnCola.Name = "btnCola";
-            btnCola.Size = new Size(204, 105);
-            btnCola.TabIndex = 1;
-            btnCola.Text = "Coca Cola";
-            btnCola.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
@@ -153,7 +85,7 @@
             groupBox3.Size = new Size(875, 194);
             groupBox3.TabIndex = 3;
             groupBox3.TabStop = false;
-            groupBox3.Text = "groupBox3";
+            groupBox3.Text = "Deserti";
             // 
             // btnSweets
             // 
@@ -181,7 +113,7 @@
             groupBox4.Size = new Size(875, 203);
             groupBox4.TabIndex = 4;
             groupBox4.TabStop = false;
-            groupBox4.Text = "Poklon bonovi";
+            groupBox4.Text = "Kuponi";
             // 
             // btnCupon100
             // 
@@ -256,6 +188,7 @@
             AutoScaleDimensions = new SizeF(17F, 41F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1837, 1183);
+            Controls.Add(groupBox1);
             Controls.Add(btnCheckout);
             Controls.Add(btnNew);
             Controls.Add(lblSum);
@@ -265,13 +198,10 @@
             Controls.Add(groupBox4);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
-            Controls.Add(groupBox1);
             Controls.Add(lblHeader);
             Name = "Form1";
             Text = "VUB Caffe";
             Paint += Form1_Paint;
-            groupBox1.ResumeLayout(false);
-            groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
             groupBox4.ResumeLayout(false);
             ResumeLayout(false);
@@ -282,13 +212,7 @@
 
         private Label lblHeader;
         private GroupBox groupBox1;
-        private Button btnLatte;
-        private Button btnCappucino;
-        private Button btnEspresso;
         private GroupBox groupBox2;
-        private Button btnFanta;
-        private Button btnSprite;
-        private Button btnCola;
         private GroupBox groupBox3;
         private Button btnSweets;
         private Button btnIceCream;

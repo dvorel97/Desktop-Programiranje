@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Zadaca.Items.Consumables.Desserts
 {
-    internal class Cake : Dessert
+    public class Cake : Dessert
     {
-        Cake(string name, decimal price) : base(name, price)
+        public Cake(string name, decimal price) : base(name, price)
         {
 
         }

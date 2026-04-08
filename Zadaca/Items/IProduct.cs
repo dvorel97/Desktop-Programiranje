@@ -11,5 +11,6 @@ namespace Zadaca
         decimal Price { get; }
         double Quantity { get; }
         string MeasuringUnit { get; }
+        string Category { get; }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Zadaca.Items.Consumables.Desserts
 {
-    internal class IceCream : Dessert
+    public class IceCream : Dessert
     {
         public IceCream() : base("Sladoled", 1m) 
         {

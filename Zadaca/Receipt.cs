@@ -18,6 +18,7 @@ namespace Zadaca
         public void AddItem(IProduct product)
         {
             items.Add(product);
+            sum += product.Price;
         }
 
         public override string ToString()

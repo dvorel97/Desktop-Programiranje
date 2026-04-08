@@ -15,7 +15,7 @@ namespace Zadaca.Items
         public decimal Price => price;
         public double Quantity => quantity;
         public string MeasuringUnit => measuringUnit;
-        public string Category = "Kuponi";
+        public string Category => "Kuponi";
 
         public Coupon(decimal price, double quantity, string measuringUnit="€")
         {

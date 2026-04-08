@@ -6,7 +6,7 @@ namespace Zadaca.Items.Consumables.Drinks
 {
     internal class Beverage:Drink
     {
-        public override string Category => "Bezalkoholno piće";
+        public override string Category => "Bezalkoholna pića";
         public Beverage(string name, decimal price, double quantity) : base(name, price, quantity) { }
     }
 }
