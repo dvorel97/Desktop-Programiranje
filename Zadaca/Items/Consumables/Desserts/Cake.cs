@@ -6,7 +6,7 @@ namespace Zadaca.Items.Consumables.Desserts
 {
     internal class Cake : Dessert
     {
-        Cake() : base("Kolač", 4m)
+        Cake(string name, decimal price) : base(name, price)
         {
 
         }

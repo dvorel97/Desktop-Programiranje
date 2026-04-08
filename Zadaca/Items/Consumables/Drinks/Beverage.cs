@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Zadaca.Items.Consumables.Drinks
 {
-    internal class Sprite : Drink
+    internal class Beverage:Drink
     {
         public override string Category => "Bezalkoholno piće";
-        public Sprite() : base("Sprite", 2.20m, 3) { }
+        public Beverage(string name, decimal price, double quantity) : base(name, price, quantity) { }
     }
 }

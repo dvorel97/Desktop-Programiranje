@@ -17,12 +17,12 @@ namespace Zadaca.Items
         public string MeasuringUnit => measuringUnit;
         public string Category = "Kuponi";
 
-        public Coupon()
+        public Coupon(decimal price, double quantity, string measuringUnit="€")
         {
             this.name = "Kupon";
-            this.price = 100m;
-            this.quantity = 100;
-            this.measuringUnit = "€";
+            this.price = price;
+            this.quantity = quantity;
+            this.measuringUnit = measuringUnit;
         }
         public override string ToString()
         {
