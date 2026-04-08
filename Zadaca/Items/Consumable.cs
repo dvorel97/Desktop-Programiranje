@@ -24,6 +24,10 @@ namespace Zadaca.Items
             this.quantity = quantity;
             this.measuringUnit = measuringUnit;
         }
+        public override string ToString()
+        {
+            return $"{this.name} ({this.quantity}{this.measuringUnit}) - {this.price}€";
+        }
 
     }
 }
