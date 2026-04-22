@@ -10,7 +10,12 @@ namespace Projekt
         private void button1_Click(object sender, EventArgs e)
         {
             var splitView = new SplitView();
-            splitView.ShowDialog();  // isto kao WinForms ShowDialog
+            splitView.ShowDialog();
+        }
+
+        private void txtPreview_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
