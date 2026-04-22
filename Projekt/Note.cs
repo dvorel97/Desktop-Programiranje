@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Projekt
 {
-    public abstract class Note
+    public class Note
     {
         // ── Polja ─────────────────────────────────────
         protected string content;
@@ -26,7 +26,7 @@ namespace Projekt
                 LastModified = DateTime.Now;
             }
         }
-        protected Note(string title, NoteType type)
+        public Note(string title, NoteType type)
         {
             this.Id = Guid.NewGuid();
             this.Title = title;
@@ -36,7 +36,6 @@ namespace Projekt
             this.LastModified = DateTime.Now;
         }
 
-        public abstract string Render();
         public virtual string GeneratePreview()
         {
             if (content == null) return string.Empty;
