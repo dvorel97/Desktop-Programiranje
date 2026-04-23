@@ -16,9 +16,11 @@
 
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             grpNotes = new GroupBox();
             txtSearch = new TextBox();
             lstNotes = new ListBox();
+            contextMenu = new ContextMenuStrip(components);
             btnNew = new Button();
             txtPreview = new TextBox();
             grpNotes.SuspendLayout();
@@ -46,10 +48,27 @@
             // 
             // lstNotes
             // 
-            lstNotes.Location = new Point(8, 99);
+            lstNotes.MouseDown += (s, e) =>
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    int index = lstNotes.IndexFromPoint(e.Location);
+                    if (index != ListBox.NoMatches)
+                        lstNotes.SelectedIndex = index;
+                }
+            };
+            lstNotes.ContextMenuStrip = contextMenu;
+            lstNotes.Location = new Point(8, 102);
             lstNotes.Name = "lstNotes";
             lstNotes.Size = new Size(434, 988);
             lstNotes.TabIndex = 2;
+            // 
+            // contextMenu
+            // 
+            contextMenu.ImageScalingSize = new Size(40, 40);
+            contextMenu.Name = "contextMenu";
+            contextMenu.Size = new Size(61, 4);
+            contextMenu.Items.Add("Obriši", null, DeleteNote);
             // 
             // btnNew
             // 
@@ -89,5 +108,6 @@
             private ListBox lstNotes;
             private Button btnNew;
         private TextBox txtPreview;
+        private ContextMenuStrip contextMenu;
     }
     }

@@ -27,10 +27,34 @@ namespace Projekt
             lstNotes.DisplayMember = "Title";
         }
 
+        private void DeleteNote(object sender, EventArgs e)
+        {
+            if (lstNotes.SelectedItem is not Note note) return;
+
+            var result = MessageBox.Show(
+                $"Obrisati \"{note.Title}\"?",
+                "NoteForge",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                repository.Remove(note);
+                RefreshNoteList();
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             var splitView = new SplitView();
             splitView.ShowDialog();
+        }
+
+        private void DeleteNote()
+        {
+            if (lstNotes.SelectedItem is not Note note) return;
+            repository.Remove(note);
+            RefreshNoteList();
         }
 
         private void txtPreview_TextChanged(object sender, EventArgs e)
