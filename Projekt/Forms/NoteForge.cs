@@ -1,3 +1,5 @@
+using Projekt.Forms;
+
 namespace Projekt
 {
     public partial class NoteForge : Form
@@ -44,22 +46,25 @@ namespace Projekt
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            var splitView = new SplitView();
+            string query = txtSearch.Text.Trim();
+            lstNotes.Items.Clear();
+
+            var results = string.IsNullOrEmpty(query)
+                ? repository.Notes
+                : repository.Search(query);
+
+            foreach (var note in results)
+                lstNotes.Items.Add(note);
+
+            lstNotes.DisplayMember = "Title";
+        }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            var splitView = new NoteEditor();
             splitView.ShowDialog();
-        }
-
-        private void DeleteNote()
-        {
-            if (lstNotes.SelectedItem is not Note note) return;
-            repository.Remove(note);
-            RefreshNoteList();
-        }
-
-        private void txtPreview_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

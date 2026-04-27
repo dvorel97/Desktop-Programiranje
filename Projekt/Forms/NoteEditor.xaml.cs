@@ -10,14 +10,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Projekt
+namespace Projekt.Forms
 {
     /// <summary>
-    /// Interaction logic for SplitView.xaml
+    /// Interaction logic for NoteEditor.xaml
     /// </summary>
-    public partial class SplitView : Window
+    public partial class NoteEditor : Window
     {
-        public SplitView()
+        public NoteEditor()
         {
             InitializeComponent();
         }

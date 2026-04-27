@@ -45,18 +45,10 @@
             txtSearch.PlaceholderText = "Pretraga";
             txtSearch.Size = new Size(434, 47);
             txtSearch.TabIndex = 1;
+            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // lstNotes
             // 
-            lstNotes.MouseDown += (s, e) =>
-            {
-                if (e.Button == MouseButtons.Right)
-                {
-                    int index = lstNotes.IndexFromPoint(e.Location);
-                    if (index != ListBox.NoMatches)
-                        lstNotes.SelectedIndex = index;
-                }
-            };
             lstNotes.ContextMenuStrip = contextMenu;
             lstNotes.Location = new Point(8, 102);
             lstNotes.Name = "lstNotes";
@@ -68,7 +60,6 @@
             contextMenu.ImageScalingSize = new Size(40, 40);
             contextMenu.Name = "contextMenu";
             contextMenu.Size = new Size(61, 4);
-            contextMenu.Items.Add("Obriši", null, DeleteNote);
             // 
             // btnNew
             // 
@@ -77,6 +68,7 @@
             btnNew.Size = new Size(434, 57);
             btnNew.TabIndex = 3;
             btnNew.Text = "Nova biljeska";
+            btnNew.Click += btnNew_Click;
             // 
             // txtPreview
             // 
