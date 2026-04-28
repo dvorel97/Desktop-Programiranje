@@ -11,7 +11,6 @@ namespace McOrders {
     public void AddOrder(Food food) {
       var order = new Order(nextOrderId++, food);
       Task task = Task.Run(() => {
-        Thread.Sleep(2000);
         StartOrder(order);
         Thread.Sleep(order.Food.PreparingTime * 1000);
         CompleteOrder(order);
