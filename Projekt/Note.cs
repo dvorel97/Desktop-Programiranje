@@ -26,12 +26,13 @@ namespace Projekt
                 LastModified = DateTime.Now;
             }
         }
-        public Note(string title, NoteType type)
+        public Note(string title, string content = "", NoteType type=NoteType.Default)
         {
             this.Id = Guid.NewGuid();
             this.Title = title;
             this.Type = type;
             this.Tags = Array.Empty<string>();
+            this.Content = content;
             this.Created = DateTime.Now;
             this.LastModified = DateTime.Now;
         }

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace Projekt
 {
         public class NoteRepository
         {
-            private List<Note> notes = new();
+            private List<Note> notes = new List<Note>();
 
-            public IReadOnlyList<Note> Notes => notes.AsReadOnly();
+
+        public IReadOnlyList<Note> Notes => notes.AsReadOnly();
 
             public void Add(Note note)
             {

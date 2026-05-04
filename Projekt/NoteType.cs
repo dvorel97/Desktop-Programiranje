@@ -10,6 +10,8 @@ namespace Projekt
         Work,
         Study,
         Idea,
-        Project
+        Project,
+        Default
     }
+
 }

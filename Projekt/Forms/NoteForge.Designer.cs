@@ -89,6 +89,7 @@
             Name = "NoteForge";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "NoteForge";
+            Load += NoteForge_Load;
             grpNotes.ResumeLayout(false);
             grpNotes.PerformLayout();
             ResumeLayout(false);

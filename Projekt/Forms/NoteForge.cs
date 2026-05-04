@@ -1,4 +1,4 @@
-using Projekt.Forms;
+using Projekt;
 
 namespace Projekt
 {
@@ -8,17 +8,23 @@ namespace Projekt
         public NoteForge()
         {
             InitializeComponent();
+        }
+
+        private void NoteForge_Load(object sender, EventArgs e)
+        {
             LoadSampleData();
+            RefreshNoteList();
+            DataBase.GetNotes(repository);
             RefreshNoteList();
         }
 
         private void LoadSampleData()
         {
-            repository.Add(new Note("Arhitektura projekta", NoteType.Project));
-            repository.Add(new Note("Sprint Review", NoteType.Work));
-            repository.Add(new Note("OOP biljeske", NoteType.Study));
-            repository.Add(new Note("Ideja: dark mode", NoteType.Idea));
-            repository.Add(new Note("Osobni ciljevi", NoteType.Personal));
+            repository.Add(new Note("Arhitektura projekta", "", NoteType.Project));
+            repository.Add(new Note("Sprint Review", "", NoteType.Work));
+            repository.Add(new Note("OOP biljeske", "", NoteType.Study));
+            repository.Add(new Note("Ideja: dark mode", "", NoteType.Idea));
+            repository.Add(new Note("Osobni ciljevi", "", NoteType.Personal));
         }
 
         private void RefreshNoteList()
@@ -63,8 +69,8 @@ namespace Projekt
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            var splitView = new NoteEditor();
-            splitView.ShowDialog();
+            //var splitView = new NoteEditor();
+            //splitView.ShowDialog();
         }
     }
 }
