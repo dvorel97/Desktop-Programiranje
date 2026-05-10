@@ -1,4 +1,5 @@
 using Projekt.Services;
+using Projekt.Forms;
 
 namespace Projekt
 {
@@ -87,8 +88,8 @@ namespace Projekt
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            //var splitView = new NoteEditor();
-            //splitView.ShowDialog();
+            var noteEditor = new NoteEditor();
+            noteEditor.ShowDialog();
         }
         private void lstNotes_SelectedIndexChanged(object sender, EventArgs e)
         {
