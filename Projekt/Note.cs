@@ -6,11 +6,9 @@ namespace Projekt
 {
     public class Note
     {
-        // ── Polja ─────────────────────────────────────
         protected string content;
 
-        // ── Svojstva ──────────────────────────────────
-        public Guid Id { get; private set; }
+        public string Id { get; private set; }
         public string Title { get; set; }
         public NoteType Type { get; set; }
         public string[] Tags { get; set; }
@@ -24,17 +22,16 @@ namespace Projekt
             {
                 content = value;
                 LastModified = DateTime.Now;
+                OnContentChanged?.Invoke(this);
             }
         }
-        public Note(string title, string content = "", NoteType type=NoteType.Default)
+        public Note(string id, string title, string content = "", NoteType type=NoteType.Default)
         {
-            this.Id = Guid.NewGuid();
+            this.Id = id;
             this.Title = title;
             this.Type = type;
             this.Tags = Array.Empty<string>();
             this.Content = content;
-            this.Created = DateTime.Now;
-            this.LastModified = DateTime.Now;
         }
 
         public virtual string GeneratePreview()
@@ -57,5 +54,8 @@ namespace Projekt
         {
             return Title;
         }
+
+        public delegate void ContentChangedHandler(Note note);
+        public event ContentChangedHandler OnContentChanged;
     }
 }

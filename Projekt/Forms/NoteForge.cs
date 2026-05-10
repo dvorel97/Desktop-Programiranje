@@ -1,4 +1,4 @@
-using Projekt;
+using Projekt.Services;
 
 namespace Projekt
 {
@@ -8,23 +8,41 @@ namespace Projekt
         public NoteForge()
         {
             InitializeComponent();
+
+            lstNotes.SelectedIndexChanged += lstNotes_SelectedIndexChanged;
         }
 
         private void NoteForge_Load(object sender, EventArgs e)
         {
-            LoadSampleData();
+            LoadFromDatabase();
             RefreshNoteList();
-            DataBase.GetNotes(repository);
             RefreshNoteList();
         }
 
-        private void LoadSampleData()
+        private void LoadFromDatabase()
         {
-            repository.Add(new Note("Arhitektura projekta", "", NoteType.Project));
-            repository.Add(new Note("Sprint Review", "", NoteType.Work));
-            repository.Add(new Note("OOP biljeske", "", NoteType.Study));
-            repository.Add(new Note("Ideja: dark mode", "", NoteType.Idea));
-            repository.Add(new Note("Osobni ciljevi", "", NoteType.Personal));
+            try
+            {
+                var db = new DBService();
+                var notes = db.LoadNotes();
+
+                foreach (var note in notes)
+                {
+                    bool exists = repository.Notes
+                        .Any(n => n.Id == note.Id);
+
+                    if (!exists)
+                        repository.Add(note);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Greška pri učitavanju: {ex.Message}",
+                    "NoteForge",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         private void RefreshNoteList()
@@ -72,5 +90,11 @@ namespace Projekt
             //var splitView = new NoteEditor();
             //splitView.ShowDialog();
         }
+        private void lstNotes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstNotes.SelectedItem is not Note note) return;
+            txtPreview.Text = note.Content ?? "";
+        }
+
     }
 }

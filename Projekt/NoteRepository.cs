@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Text;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
+using Projekt.Services;
 
 namespace Projekt
 {
         public class NoteRepository
         {
             private List<Note> notes = new List<Note>();
+            private SyncService syncService = new SyncService();
 
 
         public IReadOnlyList<Note> Notes => notes.AsReadOnly();
 
-            public void Add(Note note)
-            {
-                notes.Add(note);
-                OnNoteModified?.Invoke(note, "Added");
-            }
+        public void Add(Note note)
+        {
+            notes.Add(note);
+            OnNoteModified?.Invoke(note, "Added");
+            syncService.SyncNote(note);
+        }
 
-            public void Remove(Note note)
+        public void Remove(Note note)
             {
                 notes.Remove(note);
                 OnNoteModified?.Invoke(note, "Removed");
@@ -53,6 +56,11 @@ namespace Projekt
                     if (note.Type == type)
                         results.Add(note);
                 return results;
+            }
+            
+            private void OnNoteContentChanged(Note note)
+            {
+                syncService.SyncUpdate(note);
             }
 
             public delegate void NoteModifiedHandler(Note note, string action);
