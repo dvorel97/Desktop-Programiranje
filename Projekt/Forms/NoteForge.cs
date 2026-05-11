@@ -72,13 +72,19 @@ namespace Projekt
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            var noteEditor = new NoteEditor();
+            Note newNote = new Note();
+            var noteEditor = new NoteEditor(newNote);
             noteEditor.ShowDialog();
+            if (noteEditor.Saved)
+            {
+                repository.Add(newNote);
+                RefreshNoteList();
+            }
         }
         private void lstNotes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lstNotes.SelectedItem is not Note note) return;
-            txtPreview.Text = note.Content ?? "";
+            txtPreview.Text = MDParser.Plain(note.Content) ?? "";
         }
 
     }

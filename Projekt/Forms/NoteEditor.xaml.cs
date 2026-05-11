@@ -15,6 +15,8 @@ namespace Projekt.Forms
 {
     public partial class NoteEditor : Window
     {
+        private Note note;
+        public bool Saved { get; private set; } = false;
         public NoteEditor()
         {
             InitializeComponent();
@@ -22,11 +24,35 @@ namespace Projekt.Forms
             webPreview.EnsureCoreWebView2Async();
         }
 
+        public NoteEditor(Note note) : this()
+        {
+            if(note == null)
+            {
+                throw new ArgumentNullException(nameof(note));
+                this.Close();
+            }
+
+            this.note = note;
+            txtEditor.Text = note.Content;
+            txtTitle.Text = note.Title;
+            txtTags.Text = string.Join(", ", note.Tags);
+        }
+
         private async void txtEditor_TextChanged(object sender,
-    System.Windows.Controls.TextChangedEventArgs e)
+            System.Windows.Controls.TextChangedEventArgs e)
         {
             await webPreview.EnsureCoreWebView2Async();
             webPreview.NavigateToString(MDParser.HTML(txtEditor.Text));
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            note.Title = txtTitle.Text;
+            note.Content = txtEditor.Text;
+            note.Tags = txtTags.Text.Split(',',
+                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            Saved = true;
+            this.Close();
         }
     }
 }

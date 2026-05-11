@@ -13,16 +13,16 @@ namespace Projekt
             private SyncService syncService = new SyncService();
 
 
-        public IReadOnlyList<Note> Notes => notes.AsReadOnly();
+            public IReadOnlyList<Note> Notes => notes.AsReadOnly();
 
-        public void Add(Note note)
-        {
-            notes.Add(note);
-            OnNoteModified?.Invoke(note, "Added");
-            syncService.SyncNote(note);
-        }
+            public void Add(Note note)
+            {
+                notes.Add(note);
+                OnNoteModified?.Invoke(note, "Added");
+                syncService.SyncNote(note);
+            }
 
-        public void Remove(Note note)
+            public void Remove(Note note)
             {
                 notes.Remove(note);
                 OnNoteModified?.Invoke(note, "Removed");

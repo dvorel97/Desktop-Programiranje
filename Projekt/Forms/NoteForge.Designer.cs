@@ -45,7 +45,6 @@
             txtSearch.PlaceholderText = "Pretraga";
             txtSearch.Size = new Size(434, 47);
             txtSearch.TabIndex = 1;
-            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // lstNotes
             // 

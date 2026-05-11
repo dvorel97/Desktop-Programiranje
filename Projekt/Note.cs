@@ -25,14 +25,26 @@ namespace Projekt
                 OnContentChanged?.Invoke(this);
             }
         }
-        public Note(string id, string title, string content = "", NoteType type=NoteType.Default)
+        public Note(
+            string id, 
+            string title, 
+            string content = "", 
+            NoteType type=NoteType.Default, 
+            string[] tags= null)
         {
             this.Id = id;
             this.Title = title;
             this.Type = type;
-            this.Tags = Array.Empty<string>();
+            this.Tags = tags ?? Array.Empty<string>();
             this.Content = content;
         }
+
+        public Note() : this(
+            Guid.NewGuid().ToString(),
+            "",
+            "",
+            NoteType.Personal,
+            null){ }
 
         public virtual string GeneratePreview()
         {
