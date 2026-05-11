@@ -6,9 +6,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Projekt.Services
 {
-    public class MarkdownParser
+    public class MDParser
     {
-        public string Parse(string text)
+        public static string HTML(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return "<html><body></body></html>";
@@ -46,6 +46,31 @@ namespace Projekt.Services
                     "li { margin: 4px 0; }" +
                     "</style></head>" +
                     $"<body>{html}</body></html>";
+        }
+        public static string Plain(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            string plain = text;
+
+            // Ukloni naslove
+            plain = Regex.Replace(plain, @"^#{1,3} ", "", RegexOptions.Multiline);
+
+            // Ukloni podebljano i kurziv
+            plain = Regex.Replace(plain, @"\*\*(.+?)\*\*", "$1");
+            plain = Regex.Replace(plain, @"\*(.+?)\*", "$1");
+
+            // Ukloni precrtano
+            plain = Regex.Replace(plain, @"~~(.+?)~~", "$1");
+
+            // Ukloni inline kod
+            plain = Regex.Replace(plain, @"`(.+?)`", "$1");
+
+            // Ukloni liste
+            plain = Regex.Replace(plain, @"^- ", "", RegexOptions.Multiline);
+
+            return plain.Trim();
         }
     }
 }

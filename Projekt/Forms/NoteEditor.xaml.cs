@@ -15,7 +15,6 @@ namespace Projekt.Forms
 {
     public partial class NoteEditor : Window
     {
-        private readonly MarkdownParser mdParser = new MarkdownParser();
         public NoteEditor()
         {
             InitializeComponent();
@@ -27,7 +26,7 @@ namespace Projekt.Forms
     System.Windows.Controls.TextChangedEventArgs e)
         {
             await webPreview.EnsureCoreWebView2Async();
-            webPreview.NavigateToString(mdParser.Parse(txtEditor.Text));
+            webPreview.NavigateToString(MDParser.HTML(txtEditor.Text));
         }
     }
 }

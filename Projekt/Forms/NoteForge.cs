@@ -9,7 +9,6 @@ namespace Projekt
         public NoteForge()
         {
             InitializeComponent();
-
             lstNotes.SelectedIndexChanged += lstNotes_SelectedIndexChanged;
         }
 
@@ -69,21 +68,6 @@ namespace Projekt
                 repository.Remove(note);
                 RefreshNoteList();
             }
-        }
-
-        private void txtSearch_TextChanged(object sender, EventArgs e)
-        {
-            string query = txtSearch.Text.Trim();
-            lstNotes.Items.Clear();
-
-            var results = string.IsNullOrEmpty(query)
-                ? repository.Notes
-                : repository.Search(query);
-
-            foreach (var note in results)
-                lstNotes.Items.Add(note);
-
-            lstNotes.DisplayMember = "Title";
         }
 
         private void btnNew_Click(object sender, EventArgs e)
