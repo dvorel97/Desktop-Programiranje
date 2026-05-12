@@ -4,12 +4,40 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters.Soap;
 
 namespace lab10
 {
     class Notes
     {
         public Notes() { db = new NotesModel(); }
+        SoapFormatter sf = new SoapFormatter();
+
+        public void addXML(string data)
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(Note));
+
+            using (StringReader sr = new StringReader(data))
+            {
+                Note newNote = (Note)xs.Deserialize(sr);
+
+                db.Notes.Add(newNote);
+                db.SaveChanges();
+            }
+        }
+
+        public string loadXMLdb()
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(List<Note>));
+
+            using (StringWriter sw = new StringWriter())
+            {
+                xs.Serialize(sw, db.Notes.ToList());
+                return sw.ToString();
+            }
+        }
         
         public IEnumerable<Note> getAllNotes(){
             return db.Notes;

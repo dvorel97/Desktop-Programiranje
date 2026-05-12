@@ -19,26 +19,21 @@ namespace lab10
             InitializeComponent();
             
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string data = notes.ToString();
-            MessageBox.Show(data);
-        }
 
+        private void Form1_Load()
+        {
+            notes.getAllNotes();
+
+        }
         private void button2_Click(object sender, EventArgs e)
         {
-            var n = notes.getAllNotes();
-            notes.delete(n.First());
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            notes.update(notes.getAllNotes().First());
+            rtbNotes.Text = notes.loadXMLdb();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            notes.add();
+            notes.addXML(rtbNew.Text);
         }
+
     }
 }
