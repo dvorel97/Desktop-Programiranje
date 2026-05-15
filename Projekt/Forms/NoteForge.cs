@@ -73,13 +73,19 @@ namespace Projekt
         private void btnNew_Click(object sender, EventArgs e)
         {
             MarkdownNote newNote = new MarkdownNote();
+            repository.Add(newNote, sync:true);
+
             var noteEditor = new NoteEditor(newNote);
             noteEditor.ShowDialog();
             if (noteEditor.Saved)
             {
-                repository.Add(newNote);
-                RefreshNoteList();
+                repository.Update(newNote);
             }
+            else
+            {
+                repository.Remove(newNote);
+            }
+            RefreshNoteList();
         }
         private void lstNotes_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -101,6 +107,5 @@ namespace Projekt
                 lstNotes.Items.Add(result.Note);
             lstNotes.DisplayMember = "Title";
         }
-
     }
 }

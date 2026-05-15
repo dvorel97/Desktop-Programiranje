@@ -23,6 +23,7 @@
             contextMenu = new ContextMenuStrip(components);
             btnNew = new Button();
             txtPreview = new TextBox();
+            autoSaveTimer = new System.Windows.Forms.Timer(components);
             grpNotes.SuspendLayout();
             SuspendLayout();
             // 
@@ -79,6 +80,10 @@
             txtPreview.Size = new Size(1078, 1067);
             txtPreview.TabIndex = 3;
             // 
+            // autoSaveTimer
+            // 
+            autoSaveTimer.Interval = 30000;
+            // 
             // NoteForge
             // 
             ClientSize = new Size(1575, 1196);
@@ -101,5 +106,6 @@
             private Button btnNew;
         private TextBox txtPreview;
         private ContextMenuStrip contextMenu;
+        private System.Windows.Forms.Timer autoSaveTimer;
     }
     }

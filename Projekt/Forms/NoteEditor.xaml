@@ -59,12 +59,17 @@
             </DockPanel>
         </Grid>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal"
-                    HorizontalAlignment="Right" Margin="8">
-            <Button x:Name="btnSave" Content="Spremi"
-                    Width="100" Margin="4" Click="btnSave_Click"/>
-            <Button x:Name="btnCancel" Content="Odustani"
-                    Width="100" Margin="4" Click="btnCancel_Click"/>
-        </StackPanel>
+        <DockPanel Grid.Row="2" Margin="8">
+            <TextBlock x:Name="txtLastSaved" Text="Nije još spremljeno"
+               DockPanel.Dock="Left" VerticalAlignment="Center" Margin="10,5"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                DockPanel.Dock="Right">
+                <Button x:Name="btnSave" Content="Spremi"
+                Width="100" Margin="4" Click="btnSave_Click"/>
+                <Button x:Name="btnCancel" Content="Odustani"
+                Width="100" Margin="4" Click="btnCancel_Click"/>
+            </StackPanel>
+        </DockPanel>
     </Grid>
 </Window>

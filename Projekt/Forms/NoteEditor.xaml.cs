@@ -11,12 +11,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Projekt.Services;
 
+
 namespace Projekt.Forms
 {
+    
+
     public partial class NoteEditor : Window
     {
         private Note note;
-        public bool Saved { get; private set; } = false;
+        public bool Saved { get; private set; } = true;
+
+        private System.Windows.Threading.DispatcherTimer autoSaveTimer;
         public NoteEditor()
         {
             InitializeComponent();
@@ -36,6 +41,15 @@ namespace Projekt.Forms
             txtEditor.Text = note.Content;
             txtTitle.Text = note.Title;
             txtTags.Text = string.Join(", ", note.Tags);
+
+            // Pokreni timer
+            autoSaveTimer = new System.Windows.Threading.DispatcherTimer();
+            autoSaveTimer.Interval = TimeSpan.FromSeconds(30);
+            autoSaveTimer.Tick += async (s, e) => await AutoSaveAsync();
+            autoSaveTimer.Start();
+
+            //zaustavi timer kod zatvaranja
+            this.Closing += (s, e) => autoSaveTimer.Stop();
         }
 
         private async void txtEditor_TextChanged(object sender,
@@ -59,6 +73,24 @@ namespace Projekt.Forms
         {
             Saved = false;
             this.Close();
+        }
+
+        private async Task AutoSaveAsync()
+        {
+            if (note == null) return;
+
+            note.Title = txtTitle.Text;
+            note.Content = txtEditor.Text;
+            note.Tags = txtTags.Text.Split(',',
+                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            await Task.Run(() =>
+            {
+                var db = new Services.DBService();
+                db.UpdateNote(note);
+            });
+
+            txtLastSaved.Text = $"Zadnje spremljeno: {DateTime.Now:HH:mm:ss}";
         }
     }
 }
