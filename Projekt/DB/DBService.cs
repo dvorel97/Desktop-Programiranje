@@ -52,7 +52,7 @@ namespace Projekt.Services
                 if (!string.IsNullOrEmpty(entity.Type))
                     Enum.TryParse<NoteType>(entity.Type, out type);
 
-                var note = new Note(
+                var note = new MarkdownNote(
                     entity.Id,
                     entity.Title ?? "Bez naslova",
                     entity.Content ?? "",

@@ -4,53 +4,121 @@ namespace Projekt
 {
     public class NoteRepository<T> where T : Note
     {
-        private List<T> notes = new();
         private SyncService syncService = new();
+        private List<T> notes = new();
+        private Dictionary<string, List<T>> notesByTag = new();
+        private HashSet<string> uniqueTags = new();
+        private SortedList<DateTime, T> notesByDate = new();
 
         public IReadOnlyList<T> Notes => notes.AsReadOnly();
 
-        public void Add(T note)
+        public void Add(T note, bool sync=true)
         {
+            //dodavanje note u repozitory
             notes.Add(note);
-            note.OnContentChanged += OnNoteContentChanged;
-            OnNoteModified?.Invoke(note, "Added");
-            syncService.SyncNote(note);
-        }
+            //dodavanje note u sorted list by date
+            notesByDate.Add(note.LastModified, note);
+            //dodavanje note u dict by tag, i tag u unique tags
+            foreach (var tag in note.Tags)
+            {
+                if (!notesByTag.ContainsKey(tag))
+                    notesByTag[tag] = new List<T>();
+                notesByTag[tag].Add(note);
+                uniqueTags.Add(tag);
+            }
 
-        public void AddLocal(T note)
-        {
-            notes.Add(note);
             note.OnContentChanged += OnNoteContentChanged;
-            OnNoteModified?.Invoke(note, "Added");
+            if (sync)
+            {
+                syncService.SyncNote(note);
+            }
         }
 
         public void Remove(T note)
         {
             notes.Remove(note);
-            OnNoteModified?.Invoke(note, "Removed");
+
+            var key = notesByDate.Keys.FirstOrDefault(k => notesByDate[k].Id == note.Id);
+            if (key != default)
+                notesByDate.Remove(key);
+
+            // Ukloni iz Dictionary i HashSet
+            foreach (var tag in note.Tags)
+            {
+                if (notesByTag.ContainsKey(tag))
+                {
+                    notesByTag[tag].Remove(note);
+                    if (notesByTag[tag].Count == 0)
+                    {
+                        notesByTag.Remove(tag);
+                        uniqueTags.Remove(tag);
+                    }
+                }
+            }
+
             syncService.SyncDelete(note);
         }
 
         public void Update(T note)
         {
-            OnNoteModified?.Invoke(note, "Updated");
+            // Azuriraj SortedList
+            var key = notesByDate.Keys.FirstOrDefault(k => notesByDate[k].Id == note.Id);
+            if (key != default)
+                notesByDate.Remove(key);
+
+            while (notesByDate.ContainsKey(note.LastModified))
+                note.LastModified = note.LastModified.AddTicks(1);
+            notesByDate.Add(note.LastModified, note);
+
+            // Azuriraj tagove — ukloni stare, dodaj nove
+            foreach (var tag in notesByTag.Keys.ToList())
+            {
+                notesByTag[tag].Remove(note);
+                if (notesByTag[tag].Count == 0)
+                {
+                    notesByTag.Remove(tag);
+                    uniqueTags.Remove(tag);
+                }
+            }
+
+            foreach (var tag in note.Tags)
+            {
+                uniqueTags.Add(tag);
+                if (!notesByTag.ContainsKey(tag))
+                    notesByTag[tag] = new List<T>();
+                notesByTag[tag].Add(note);
+            }
+
             syncService.SyncUpdate(note);
         }
 
-        public List<T> Search(string query)
+        public List<SearchResult> Search(string query)
         {
-            var results = new List<T>();
+            var results = new List<SearchResult>();
             foreach (var note in notes)
             {
-                bool titleMatch = note.Title.Contains(query,
-                    StringComparison.OrdinalIgnoreCase);
-                bool contentMatch = note.Content?.Contains(query,
-                    StringComparison.OrdinalIgnoreCase) ?? false;
+                int titleMatches = CountOccurrences(note.Title, query);
+                int contentMatches = CountOccurrences(note.Content ?? "", query);
 
-                if (titleMatch || contentMatch)
-                    results.Add(note);
+                if (titleMatches > 0)
+                    results.Add(new SearchResult(note, "Title", titleMatches));
+                else if (contentMatches > 0)
+                    results.Add(new SearchResult(note, "Content", contentMatches));
             }
             return results;
+        }
+
+        private int CountOccurrences(string text, string query)
+        {
+            if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(query)) return 0;
+            int count = 0, index = 0;
+            while ((index = text.IndexOf(query, index,
+                StringComparison.OrdinalIgnoreCase)) != -1)
+            {
+                count++;
+                index += query.Length;
+            }
+            return count;
         }
 
         public List<T> GetByType(NoteType type)
@@ -62,12 +130,27 @@ namespace Projekt
             return results;
         }
 
+        public List<T> GetByTag(string tag)
+        {
+            return notesByTag.ContainsKey(tag) ? notesByTag[tag] : new List<T>();
+        }
+
+        public T GetById(string id)
+        {
+            foreach (var note in notes)
+                if (note.Id == id)
+                    return note;
+            throw new NoteNotFoundException(id);
+        }
+
         private void OnNoteContentChanged(Note note)
         {
             syncService.SyncUpdate(note);
         }
 
         public delegate void NoteModifiedHandler(T note, string action);
-        public event NoteModifiedHandler OnNoteModified;
+        public IReadOnlyDictionary<string, List<T>> NotesByTag => notesByTag;
+        public IReadOnlySet<string> UniqueTags => uniqueTags;
+        public IReadOnlyList<T> NotesByDate => notesByDate.Values.ToList();
     }
 }

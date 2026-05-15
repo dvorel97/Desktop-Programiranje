@@ -10,12 +10,12 @@ namespace Projekt
         {
             InitializeComponent();
             lstNotes.SelectedIndexChanged += lstNotes_SelectedIndexChanged;
+            txtSearch.TextChanged += txtSearch_TextChanged;
         }
 
         private void NoteForge_Load(object sender, EventArgs e)
         {
             LoadFromDatabase();
-            RefreshNoteList();
             RefreshNoteList();
         }
 
@@ -32,7 +32,7 @@ namespace Projekt
                         .Any(n => n.Id == note.Id);
 
                     if (!exists)
-                        repository.Add(note);
+                        repository.Add(note, sync:false);
                 }
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace Projekt
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            Note newNote = new Note();
+            MarkdownNote newNote = new MarkdownNote();
             var noteEditor = new NoteEditor(newNote);
             noteEditor.ShowDialog();
             if (noteEditor.Saved)
@@ -85,6 +85,21 @@ namespace Projekt
         {
             if (lstNotes.SelectedItem is not Note note) return;
             txtPreview.Text = MDParser.Plain(note.Content) ?? "";
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtSearch.Text))
+            {
+                RefreshNoteList();
+                return;
+            }
+
+            var results = repository.Search(txtSearch.Text);
+            lstNotes.Items.Clear();
+            foreach (var result in results)
+                lstNotes.Items.Add(result.Note);
+            lstNotes.DisplayMember = "Title";
         }
 
     }

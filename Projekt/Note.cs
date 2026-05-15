@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Projekt
 {
-    public class Note : IExportable
+    public abstract class Note : IExportable
     {
         protected string content;
 
@@ -73,27 +73,9 @@ namespace Projekt
             return Title;
         }
 
-        public string ExportToHTML()
-        {
-            return $"<h1>{Title}</h1><p>{MDParser.HTML(content)}</p>";
-        }
-        
-        public string ExportToTXT()
-        {
-            return $"{Title}\n{MDParser.Plain(content)}";
-        }
-
-        public string ExportToXML()
-        {
-            XmlSerializer xs = new XmlSerializer(typeof(Note));
-
-            using (StringWriter sw = new StringWriter())
-            {
-                xs.Serialize(sw, this);
-                return sw.ToString();
-            }
-        }
-
+        public abstract string ExportToHTML();
+        public abstract string ExportToTXT();
+        public abstract string ExportToXML();
 
         public delegate void ContentChangedHandler(Note note);
         [field: XmlIgnore]
