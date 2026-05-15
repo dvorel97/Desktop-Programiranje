@@ -9,52 +9,64 @@ namespace Projekt
         private Dictionary<string, List<T>> notesByTag = new();
         private HashSet<string> uniqueTags = new();
         private SortedList<DateTime, T> notesByDate = new();
+        private readonly ReaderWriterLockSlim _searchLock = new();
 
         public IReadOnlyList<T> Notes => notes.AsReadOnly();
 
         public void Add(T note, bool sync=true)
         {
-            //dodavanje note u repozitory
-            notes.Add(note);
-            //dodavanje note u sorted list by date
-            notesByDate.Add(note.LastModified, note);
-            //dodavanje note u dict by tag, i tag u unique tags
-            foreach (var tag in note.Tags)
+            _searchLock.EnterWriteLock();
+            try
             {
-                if (!notesByTag.ContainsKey(tag))
-                    notesByTag[tag] = new List<T>();
-                notesByTag[tag].Add(note);
-                uniqueTags.Add(tag);
+                //dodavanje note u repozitory
+                notes.Add(note);
+                //dodavanje note u sorted list by date
+                notesByDate.Add(note.LastModified, note);
+                //dodavanje note u dict by tag, i tag u unique tags
+                foreach (var tag in note.Tags)
+                {
+                    if (!notesByTag.ContainsKey(tag))
+                        notesByTag[tag] = new List<T>();
+                    notesByTag[tag].Add(note);
+                    uniqueTags.Add(tag);
+                }
             }
+            finally { _searchLock.ExitWriteLock(); }
 
             note.OnContentChanged += OnNoteContentChanged;
             if (sync)
             {
                 syncService.SyncNote(note);
             }
+
         }
 
         public void Remove(T note)
         {
-            notes.Remove(note);
-
-            var key = notesByDate.Keys.FirstOrDefault(k => notesByDate[k].Id == note.Id);
-            if (key != default)
-                notesByDate.Remove(key);
-
-            // Ukloni iz Dictionary i HashSet
-            foreach (var tag in note.Tags)
+            _searchLock.EnterWriteLock();
+            try
             {
-                if (notesByTag.ContainsKey(tag))
+                notes.Remove(note);
+
+                var key = notesByDate.Keys.FirstOrDefault(k => notesByDate[k].Id == note.Id);
+                if (key != default)
+                    notesByDate.Remove(key);
+
+                // Ukloni iz Dictionary i HashSet
+                foreach (var tag in note.Tags)
                 {
-                    notesByTag[tag].Remove(note);
-                    if (notesByTag[tag].Count == 0)
+                    if (notesByTag.ContainsKey(tag))
                     {
-                        notesByTag.Remove(tag);
-                        uniqueTags.Remove(tag);
+                        notesByTag[tag].Remove(note);
+                        if (notesByTag[tag].Count == 0)
+                        {
+                            notesByTag.Remove(tag);
+                            uniqueTags.Remove(tag);
+                        }
                     }
                 }
             }
+            finally { _searchLock.ExitWriteLock(); }
 
             syncService.SyncDelete(note);
         }
@@ -94,18 +106,26 @@ namespace Projekt
 
         public List<SearchResult> Search(string query)
         {
-            var results = new List<SearchResult>();
-            foreach (var note in notes)
+            _searchLock.EnterReadLock();
+            try
             {
-                int titleMatches = CountOccurrences(note.Title, query);
-                int contentMatches = CountOccurrences(note.Content ?? "", query);
+                var results = new List<SearchResult>();
+                foreach (var note in notes)
+                {
+                    int titleMatches = CountOccurrences(note.Title, query);
+                    int contentMatches = CountOccurrences(note.Content ?? "", query);
 
-                if (titleMatches > 0)
-                    results.Add(new SearchResult(note, "Title", titleMatches));
-                else if (contentMatches > 0)
-                    results.Add(new SearchResult(note, "Content", contentMatches));
+                    if (titleMatches > 0)
+                        results.Add(new SearchResult(note, "Title", titleMatches));
+                    else if (contentMatches > 0)
+                        results.Add(new SearchResult(note, "Content", contentMatches));
+                }
+                return results;
             }
-            return results;
+            finally
+            {
+                _searchLock.ExitReadLock();
+            }
         }
 
         private int CountOccurrences(string text, string query)
