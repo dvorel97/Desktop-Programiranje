@@ -54,5 +54,11 @@ namespace Projekt.Forms
             Saved = true;
             this.Close();
         }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            Saved = false;
+            this.Close();
+        }
     }
 }

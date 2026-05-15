@@ -5,7 +5,7 @@ namespace Projekt
 {
     public partial class NoteForge : Form
     {
-        private NoteRepository repository = new NoteRepository();
+        private NoteRepository<Note> repository = new NoteRepository<Note>();
         public NoteForge()
         {
             InitializeComponent();

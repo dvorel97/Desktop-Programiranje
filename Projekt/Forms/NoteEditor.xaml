@@ -64,7 +64,7 @@
             <Button x:Name="btnSave" Content="Spremi"
                     Width="100" Margin="4" Click="btnSave_Click"/>
             <Button x:Name="btnCancel" Content="Odustani"
-                    Width="100" Margin="4"/>
+                    Width="100" Margin="4" Click="btnCancel_Click"/>
         </StackPanel>
     </Grid>
 </Window>
