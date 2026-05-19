@@ -9,16 +9,16 @@ using System.Xml.Serialization;
 namespace lab10
 {
 
-    [XmlRoot("note")]
+    [XmlRoot("Note")]
     public partial class Note
     {
-        [XmlAttribute("id")]
+        [XmlAttribute("Id")]
         public int Id { get; set; }
 
-        [XmlAttribute("content")]
-        public string Content { get; set; }
-
-        [XmlAttribute("name")]
+        [XmlAttribute("Name")]
         public string Name { get; set; }
+
+        [XmlAttribute("Content")]
+        public string Content { get; set; }
     }
 }

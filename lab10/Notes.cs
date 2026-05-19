@@ -1,31 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
+using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Runtime.Serialization.Formatters.Soap;
 
 namespace lab10
 {
     class Notes
     {
         public Notes() { db = new NotesModel(); }
-        SoapFormatter sf = new SoapFormatter();
 
         public void addXML(string data)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(Note));
+            var settings = new XmlReaderSettings();
+            settings.Schemas.Add(null, "C:\\Users\\vub.ABSVUB\\Documents\\dvorel\\DesktopAplikacije\\lab10\\note.xsd");
+            settings.ValidationType = ValidationType.Schema;
 
-            using (StringReader sr = new StringReader(data))
-            {
-                Note newNote = (Note)xs.Deserialize(sr);
+            var errors = new List<string>();
+            settings.ValidationEventHandler += (s, e) => errors.Add(e.Message);
 
-                db.Notes.Add(newNote);
-                db.SaveChanges();
-            }
+            
+
+
+                using (XmlReader xmlReader = XmlReader.Create(new StringReader(data), settings))
+                {
+                    while (xmlReader.Read()) { }
+                }
+
+
+                if (errors.Any())
+                {
+                    string er = "";
+                    foreach (var e in errors)
+                        er += e.ToString() + " ";
+
+                    MessageBox.Show(er);
+                }
+                else
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(Note));
+                    using (StringReader sr = new StringReader(data))
+                    {
+                        Note newNote = (Note)xs.Deserialize(sr);
+                        db.Notes.Add(newNote);
+                        db.SaveChanges();
+                    }
+                    
+                    MessageBox.Show("Validan!");
+                }
         }
 
         public string loadXMLdb()
