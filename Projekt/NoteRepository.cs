@@ -37,6 +37,7 @@ namespace Projekt
             if (sync)
             {
                 syncService.SyncNote(note);
+                OnNoteModified?.Invoke(note, "add");
             }
 
         }
@@ -69,6 +70,7 @@ namespace Projekt
             finally { _searchLock.ExitWriteLock(); }
 
             syncService.SyncDelete(note);
+            OnNoteModified?.Invoke(note, "delete");
         }
 
         public void Update(T note)
@@ -102,6 +104,7 @@ namespace Projekt
             }
 
             syncService.SyncUpdate(note);
+            OnNoteModified?.Invoke(note, "update");
         }
 
         public List<SearchResult> Search(string query)
@@ -169,6 +172,7 @@ namespace Projekt
         }
 
         public delegate void NoteModifiedHandler(T note, string action);
+        public event NoteModifiedHandler OnNoteModified;
         public IReadOnlyDictionary<string, List<T>> NotesByTag => notesByTag;
         public IReadOnlySet<string> UniqueTags => uniqueTags;
         public IReadOnlyList<T> NotesByDate => notesByDate.Values.ToList();
