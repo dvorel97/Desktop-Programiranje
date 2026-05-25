@@ -37,7 +37,7 @@ namespace Projekt
                         .Any(n => n.Id == note.Id);
 
                     if (!exists)
-                        repository.Add(note, sync:false);
+                        repository.Add(note, sync: false);
                 }
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace Projekt
         private void btnNew_Click(object sender, EventArgs e)
         {
             MarkdownNote newNote = new MarkdownNote();
-            repository.Add(newNote, sync:true);
+            repository.Add(newNote, sync: true);
 
             var noteEditor = new NoteEditor(newNote);
             noteEditor.ShowDialog();
@@ -111,5 +111,15 @@ namespace Projekt
             lstNotes.DisplayMember = "Title";
         }
 
+        private async void TSExportHtml_Click(object sender, EventArgs e)
+        {
+            using var dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() != DialogResult.OK) return;
+
+            await ExportService.ExportToHtml(repository.Notes, dialog.SelectedPath);
+
+            MessageBox.Show("Export završen!", "NoteForge",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }
