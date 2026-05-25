@@ -11,12 +11,24 @@ namespace Projekt
             InitializeComponent();
             lstNotes.SelectedIndexChanged += lstNotes_SelectedIndexChanged;
             txtSearch.TextChanged += txtSearch_TextChanged;
+            repository.OnNoteModified += OnNoteModified;
         }
 
         NoteRepository<Note>.NoteModifiedHandler OnNoteModified => (note, action) =>
         {
             RefreshNoteList();
         };
+        private void EditNote(object sender, EventArgs e)
+        {
+            if (lstNotes.SelectedItem is not Note note) return;
+
+            var noteEditor = new NoteEditor(note);
+            noteEditor.ShowDialog();
+
+            if (noteEditor.Saved)
+                repository.Update(note);
+        }
+
 
         private void NoteForge_Load(object sender, EventArgs e)
         {
@@ -120,6 +132,13 @@ namespace Projekt
 
             MessageBox.Show("HTML export završen!", "NoteForge",
             MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void lstNotes_MouseDown(object sender, MouseEventArgs e)
+        {
+            int index = lstNotes.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
+                lstNotes.SelectedIndex = index;
         }
     }
 }

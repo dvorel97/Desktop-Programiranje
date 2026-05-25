@@ -20,6 +20,8 @@
             grpNotes = new GroupBox();
             lstNotes = new ListBox();
             contextMenu = new ContextMenuStrip(components);
+            TSEdit = new ToolStripMenuItem();
+            TSDelete = new ToolStripMenuItem();
             txtSearch = new TextBox();
             btnNew = new Button();
             txtPreview = new TextBox();
@@ -28,6 +30,7 @@
             toolStripMenuItem1 = new ToolStripMenuItem();
             TSExportHtml = new ToolStripMenuItem();
             grpNotes.SuspendLayout();
+            contextMenu.SuspendLayout();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -49,12 +52,28 @@
             lstNotes.Name = "lstNotes";
             lstNotes.Size = new Size(434, 865);
             lstNotes.TabIndex = 2;
+            lstNotes.MouseDown += lstNotes_MouseDown;
             // 
             // contextMenu
             // 
             contextMenu.ImageScalingSize = new Size(40, 40);
+            contextMenu.Items.AddRange(new ToolStripItem[] { TSEdit, TSDelete });
             contextMenu.Name = "contextMenu";
-            contextMenu.Size = new Size(61, 4);
+            contextMenu.Size = new Size(175, 100);
+            // 
+            // TSEdit
+            // 
+            TSEdit.Name = "TSEdit";
+            TSEdit.Size = new Size(174, 48);
+            TSEdit.Text = "Uredi";
+            TSEdit.Click += EditNote;
+            // 
+            // TSDelete
+            // 
+            TSDelete.Name = "TSDelete";
+            TSDelete.Size = new Size(174, 48);
+            TSDelete.Text = "Obriši";
+            TSDelete.Click += DeleteNote;
             // 
             // txtSearch
             // 
@@ -75,7 +94,7 @@
             // 
             // txtPreview
             // 
-            txtPreview.Location = new Point(476, 86);
+            txtPreview.Location = new Point(497, 86);
             txtPreview.Multiline = true;
             txtPreview.Name = "txtPreview";
             txtPreview.ReadOnly = true;
@@ -93,7 +112,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1575, 52);
+            menuStrip1.Size = new Size(1587, 49);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -101,19 +120,19 @@
             // 
             toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { TSExportHtml });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(87, 48);
+            toolStripMenuItem1.Size = new Size(87, 45);
             toolStripMenuItem1.Text = "File";
             // 
             // TSExportHtml
             // 
             TSExportHtml.Name = "TSExportHtml";
-            TSExportHtml.Size = new Size(448, 54);
+            TSExportHtml.Size = new Size(355, 54);
             TSExportHtml.Text = "Export HTML";
             TSExportHtml.Click += TSExportHtml_Click;
             // 
             // NoteForge
             // 
-            ClientSize = new Size(1575, 1250);
+            ClientSize = new Size(1587, 1250);
             Controls.Add(menuStrip1);
             Controls.Add(btnNew);
             Controls.Add(txtPreview);
@@ -126,6 +145,7 @@
             Load += NoteForge_Load;
             grpNotes.ResumeLayout(false);
             grpNotes.PerformLayout();
+            contextMenu.ResumeLayout(false);
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
@@ -142,5 +162,7 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem TSExportHtml;
+        private ToolStripMenuItem TSEdit;
+        private ToolStripMenuItem TSDelete;
     }
     }
