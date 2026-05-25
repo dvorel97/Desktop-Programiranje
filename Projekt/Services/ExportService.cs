@@ -17,7 +17,6 @@ namespace Projekt.Services
                     string fileName = $"{note.Title}.html";
                     string path = Path.Combine(outputDir, fileName);
                     File.WriteAllText(path, html);
-                    Console.WriteLine($"Exported: {path}");
                 }
             });
         }

@@ -118,8 +118,8 @@ namespace Projekt
 
             await ExportService.ExportToHtml(repository.Notes, dialog.SelectedPath);
 
-            MessageBox.Show("Export završen!", "NoteForge",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("HTML export završen!", "NoteForge",
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
