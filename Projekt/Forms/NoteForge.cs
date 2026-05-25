@@ -13,6 +13,11 @@ namespace Projekt
             txtSearch.TextChanged += txtSearch_TextChanged;
         }
 
+        NoteRepository<Note>.NoteModifiedHandler OnNoteModified => (note, action) =>
+        {
+            RefreshNoteList();
+        };
+
         private void NoteForge_Load(object sender, EventArgs e)
         {
             LoadFromDatabase();
@@ -66,7 +71,6 @@ namespace Projekt
             if (result == DialogResult.Yes)
             {
                 repository.Remove(note);
-                RefreshNoteList();
             }
         }
 
@@ -85,7 +89,6 @@ namespace Projekt
             {
                 repository.Remove(newNote);
             }
-            RefreshNoteList();
         }
         private void lstNotes_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -107,5 +110,6 @@ namespace Projekt
                 lstNotes.Items.Add(result.Note);
             lstNotes.DisplayMember = "Title";
         }
+
     }
 }
