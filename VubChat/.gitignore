@@ -1,0 +1,31 @@
+## Visual Studio
+.vs/
+*.suo
+*.user
+*.userprefs
+
+## Build artefakti
+bin/
+obj/
+out/
+[Bb]uild/
+[Bb]uilds/
+*.binlog
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+## Rider / Resharper
+.idea/
+*.DotSettings.user
+
+## OS smeće
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Logovi
+*.log
