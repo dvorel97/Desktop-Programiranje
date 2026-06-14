@@ -29,6 +29,8 @@
             menuStrip1 = new MenuStrip();
             toolStripMenuItem1 = new ToolStripMenuItem();
             TSExportHtml = new ToolStripMenuItem();
+            TSExportMd = new ToolStripMenuItem();
+            TSExportZip = new ToolStripMenuItem();
             grpNotes.SuspendLayout();
             contextMenu.SuspendLayout();
             menuStrip1.SuspendLayout();
@@ -118,7 +120,7 @@
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { TSExportHtml });
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { TSExportHtml, TSExportMd, TSExportZip });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(87, 45);
             toolStripMenuItem1.Text = "File";
@@ -129,6 +131,20 @@
             TSExportHtml.Size = new Size(355, 54);
             TSExportHtml.Text = "Export HTML";
             TSExportHtml.Click += TSExportHtml_Click;
+            //
+            // TSExportMd
+            //
+            TSExportMd.Name = "TSExportMd";
+            TSExportMd.Size = new Size(355, 54);
+            TSExportMd.Text = "Export MD";
+            TSExportMd.Click += TSExportMd_Click;
+            //
+            // TSExportZip
+            //
+            TSExportZip.Name = "TSExportZip";
+            TSExportZip.Size = new Size(355, 54);
+            TSExportZip.Text = "Export ZIP";
+            TSExportZip.Click += TSExportZip_Click;
             // 
             // NoteForge
             // 
@@ -162,6 +178,8 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem TSExportHtml;
+        private ToolStripMenuItem TSExportMd;
+        private ToolStripMenuItem TSExportZip;
         private ToolStripMenuItem TSEdit;
         private ToolStripMenuItem TSDelete;
     }

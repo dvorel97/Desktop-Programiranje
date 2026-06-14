@@ -134,6 +134,30 @@ namespace Projekt
             MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private async void TSExportMd_Click(object sender, EventArgs e)
+        {
+            using var dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() != DialogResult.OK) return;
+
+            await ExportService.ExportToMd(repository.Notes, dialog.SelectedPath);
+
+            MessageBox.Show("MD export završen!", "NoteForge",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private async void TSExportZip_Click(object sender, EventArgs e)
+        {
+            using var dialog = new SaveFileDialog();
+            dialog.Filter = "ZIP|*.zip";
+            dialog.FileName = "NoteForge_export.zip";
+            if (dialog.ShowDialog() != DialogResult.OK) return;
+
+            await ExportService.ExportToZip(repository.Notes, dialog.FileName);
+
+            MessageBox.Show("ZIP export završen!", "NoteForge",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void lstNotes_MouseDown(object sender, MouseEventArgs e)
         {
             int index = lstNotes.IndexFromPoint(e.Location);
