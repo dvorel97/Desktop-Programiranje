@@ -1,4 +1,4 @@
-﻿using Projekt.Services;
+using Projekt.Services;
 
 namespace Projekt
 {
@@ -10,6 +10,9 @@ namespace Projekt
         private HashSet<string> uniqueTags = new();
         private SortedList<DateTime, T> notesByDate = new();
         private readonly ReaderWriterLockSlim _searchLock = new();
+        private readonly ReaderWriterLockSlim _indexLock = new();
+
+        private Dictionary<string, List<T>> _searchIndex = new();
 
         public IReadOnlyList<T> Notes => notes.AsReadOnly();
 
@@ -18,11 +21,8 @@ namespace Projekt
             _searchLock.EnterWriteLock();
             try
             {
-                //dodavanje note u repozitory
                 notes.Add(note);
-                //dodavanje note u sorted list by date
                 notesByDate.Add(note.LastModified, note);
-                //dodavanje note u dict by tag, i tag u unique tags
                 foreach (var tag in note.Tags)
                 {
                     if (!notesByTag.ContainsKey(tag))
@@ -40,6 +40,7 @@ namespace Projekt
                 OnNoteModified?.Invoke(note, "add");
             }
 
+            RebuildSearchIndex();
         }
 
         public void Remove(T note)
@@ -53,7 +54,6 @@ namespace Projekt
                 if (key != default)
                     notesByDate.Remove(key);
 
-                // Ukloni iz Dictionary i HashSet
                 foreach (var tag in note.Tags)
                 {
                     if (notesByTag.ContainsKey(tag))
@@ -71,11 +71,11 @@ namespace Projekt
 
             syncService.SyncDelete(note);
             OnNoteModified?.Invoke(note, "delete");
+            RebuildSearchIndex();
         }
 
         public void Update(T note)
         {
-            // Azuriraj SortedList
             var key = notesByDate.Keys.FirstOrDefault(k => notesByDate[k].Id == note.Id);
             if (key != default)
                 notesByDate.Remove(key);
@@ -84,7 +84,6 @@ namespace Projekt
                 note.LastModified = note.LastModified.AddTicks(1);
             notesByDate.Add(note.LastModified, note);
 
-            // Azuriraj tagove — ukloni stare, dodaj nove
             foreach (var tag in notesByTag.Keys.ToList())
             {
                 notesByTag[tag].Remove(note);
@@ -105,30 +104,36 @@ namespace Projekt
 
             syncService.SyncUpdate(note);
             OnNoteModified?.Invoke(note, "update");
+            RebuildSearchIndex();
         }
 
         public List<SearchResult> Search(string query)
         {
-            _searchLock.EnterReadLock();
+            _indexLock.EnterReadLock();
             try
             {
                 var results = new List<SearchResult>();
-                foreach (var note in notes)
-                {
-                    int titleMatches = CountOccurrences(note.Title, query);
-                    int contentMatches = CountOccurrences(note.Content ?? "", query);
+                var words = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-                    if (titleMatches > 0)
-                        results.Add(new SearchResult(note, "Title", titleMatches));
-                    else if (contentMatches > 0)
-                        results.Add(new SearchResult(note, "Content", contentMatches));
+                foreach (var word in words)
+                {
+                    if (_searchIndex.TryGetValue(word, out var matches))
+                    {
+                        foreach (var note in matches)
+                        {
+                            int titleMatches = CountOccurrences(note.Title, word);
+                            int contentMatches = CountOccurrences(note.Content ?? "", word);
+
+                            if (titleMatches > 0)
+                                results.Add(new SearchResult(note, "Title", titleMatches));
+                            else if (contentMatches > 0)
+                                results.Add(new SearchResult(note, "Content", contentMatches));
+                        }
+                    }
                 }
                 return results;
             }
-            finally
-            {
-                _searchLock.ExitReadLock();
-            }
+            finally { _indexLock.ExitReadLock(); }
         }
 
         private int CountOccurrences(string text, string query)
@@ -169,6 +174,37 @@ namespace Projekt
         private void OnNoteContentChanged(Note note)
         {
             syncService.SyncUpdate(note);
+        }
+
+        private void RebuildSearchIndex()
+        {
+            Thread thread = new Thread(() =>
+            {
+                var newIndex = new Dictionary<string, List<T>>(StringComparer.OrdinalIgnoreCase);
+
+                _searchLock.EnterReadLock();
+                var snapshot = notes.ToList();
+                _searchLock.ExitReadLock();
+
+                foreach (var note in snapshot)
+                {
+                    var words = (note.Title + " " + note.Content)
+                        .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var word in words)
+                    {
+                        if (!newIndex.ContainsKey(word))
+                            newIndex[word] = new List<T>();
+                        if (!newIndex[word].Contains(note))
+                            newIndex[word].Add(note);
+                    }
+                }
+
+                _indexLock.EnterWriteLock();
+                try { _searchIndex = newIndex; }
+                finally { _indexLock.ExitWriteLock(); }
+            });
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         public delegate void NoteModifiedHandler(T note, string action);

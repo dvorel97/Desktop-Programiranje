@@ -21,6 +21,9 @@ namespace Projekt.Forms
         private Note note;
         public bool Saved { get; private set; } = true;
 
+        public delegate void AutoSavedHandler(Note note, DateTime savedAt);
+        public event AutoSavedHandler OnAutoSaved;
+
         private System.Windows.Threading.DispatcherTimer autoSaveTimer;
         public NoteEditor()
         {
@@ -91,6 +94,7 @@ namespace Projekt.Forms
             });
 
             txtLastSaved.Text = $"Zadnje spremljeno: {DateTime.Now:HH:mm:ss}";
+            OnAutoSaved?.Invoke(note, DateTime.Now);
         }
     }
 }
