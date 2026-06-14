@@ -78,6 +78,32 @@ namespace Projekt.Forms
             this.Close();
         }
 
+        private void InsertMarkdown(string prefix, string suffix = "")
+        {
+            int start = txtEditor.SelectionStart;
+            int len = txtEditor.SelectionLength;
+            if (len > 0)
+            {
+                string selected = txtEditor.SelectedText;
+                txtEditor.Text = txtEditor.Text.Remove(start, len)
+                    .Insert(start, $"{prefix}{selected}{suffix}");
+                txtEditor.SelectionStart = start;
+                txtEditor.SelectionLength = len + prefix.Length + suffix.Length;
+            }
+            else
+            {
+                txtEditor.Text = txtEditor.Text.Insert(start, prefix + suffix);
+                txtEditor.SelectionStart = start + prefix.Length;
+            }
+        }
+
+        private void MenuBold_Click(object sender, RoutedEventArgs e) => InsertMarkdown("**", "**");
+        private void MenuItalic_Click(object sender, RoutedEventArgs e) => InsertMarkdown("*", "*");
+        private void MenuH1_Click(object sender, RoutedEventArgs e) => InsertMarkdown("# ");
+        private void MenuH2_Click(object sender, RoutedEventArgs e) => InsertMarkdown("## ");
+        private void MenuList_Click(object sender, RoutedEventArgs e) => InsertMarkdown("- ");
+        private void MenuCode_Click(object sender, RoutedEventArgs e) => InsertMarkdown("`", "`");
+
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
@@ -91,21 +117,7 @@ namespace Projekt.Forms
             }
             else if (e.Key == Key.B && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                int start = txtEditor.SelectionStart;
-                int len = txtEditor.SelectionLength;
-                if (len > 0)
-                {
-                    string selected = txtEditor.SelectedText;
-                    txtEditor.Text = txtEditor.Text.Remove(start, len)
-                        .Insert(start, $"**{selected}**");
-                    txtEditor.SelectionStart = start;
-                    txtEditor.SelectionLength = len + 4;
-                }
-                else
-                {
-                    txtEditor.Text = txtEditor.Text.Insert(start, "****");
-                    txtEditor.SelectionStart = start + 2;
-                }
+                InsertMarkdown("**", "**");
             }
         }
 
