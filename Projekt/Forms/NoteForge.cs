@@ -1,5 +1,6 @@
 using Projekt.Services;
 using Projekt.Forms;
+using System.IO;
 
 namespace Projekt
 {
@@ -34,6 +35,11 @@ namespace Projekt
         {
             LoadFromDatabase();
             RefreshNoteList();
+
+            cmbCategory.Items.Add("Sve");
+            foreach (NoteType type in Enum.GetValues(typeof(NoteType)))
+                cmbCategory.Items.Add(type);
+            cmbCategory.SelectedIndex = 0;
         }
 
         private void LoadFromDatabase()
@@ -112,14 +118,18 @@ namespace Projekt
         {
             if (string.IsNullOrWhiteSpace(txtSearch.Text))
             {
-                RefreshNoteList();
+                cmbCategory_SelectedIndexChanged(sender, e);
                 return;
             }
 
             var results = repository.Search(txtSearch.Text);
             lstNotes.Items.Clear();
             foreach (var result in results)
+            {
+                if (cmbCategory.SelectedItem is NoteType type && result.Note.Type != type)
+                    continue;
                 lstNotes.Items.Add(result.Note);
+            }
             lstNotes.DisplayMember = "Title";
         }
 
@@ -156,6 +166,37 @@ namespace Projekt
 
             MessageBox.Show("ZIP export završen!", "NoteForge",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void cmbCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbCategory.SelectedItem is NoteType type)
+            {
+                lstNotes.Items.Clear();
+                foreach (var note in repository.GetByType(type))
+                    lstNotes.Items.Add(note);
+                lstNotes.DisplayMember = "Title";
+            }
+            else
+            {
+                RefreshNoteList();
+            }
+        }
+
+        private void TSImportMd_Click(object sender, EventArgs e)
+        {
+            using var dialog = new OpenFileDialog();
+            dialog.Filter = "Markdown files|*.md";
+            dialog.Multiselect = true;
+            if (dialog.ShowDialog() != DialogResult.OK) return;
+
+            foreach (var file in dialog.FileNames)
+            {
+                string content = File.ReadAllText(file);
+                string title = Path.GetFileNameWithoutExtension(file);
+                var note = new MarkdownNote(Guid.NewGuid().ToString(), title, content);
+                repository.Add(note);
+            }
         }
 
         private void lstNotes_MouseDown(object sender, MouseEventArgs e)

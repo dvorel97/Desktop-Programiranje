@@ -78,6 +78,37 @@ namespace Projekt.Forms
             this.Close();
         }
 
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                note.Title = txtTitle.Text;
+                note.Content = txtEditor.Text;
+                note.Tags = txtTags.Text.Split(',',
+                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                Saved = true;
+                txtLastSaved.Text = $"Zadnje spremljeno: {DateTime.Now:HH:mm:ss}";
+            }
+            else if (e.Key == Key.B && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                int start = txtEditor.SelectionStart;
+                int len = txtEditor.SelectionLength;
+                if (len > 0)
+                {
+                    string selected = txtEditor.SelectedText;
+                    txtEditor.Text = txtEditor.Text.Remove(start, len)
+                        .Insert(start, $"**{selected}**");
+                    txtEditor.SelectionStart = start;
+                    txtEditor.SelectionLength = len + 4;
+                }
+                else
+                {
+                    txtEditor.Text = txtEditor.Text.Insert(start, "****");
+                    txtEditor.SelectionStart = start + 2;
+                }
+            }
+        }
+
         private async Task AutoSaveAsync()
         {
             if (note == null) return;

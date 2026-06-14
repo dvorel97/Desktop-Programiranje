@@ -31,6 +31,8 @@
             TSExportHtml = new ToolStripMenuItem();
             TSExportMd = new ToolStripMenuItem();
             TSExportZip = new ToolStripMenuItem();
+            TSImportMd = new ToolStripMenuItem();
+            cmbCategory = new ComboBox();
             grpNotes.SuspendLayout();
             contextMenu.SuspendLayout();
             menuStrip1.SuspendLayout();
@@ -40,6 +42,7 @@
             // 
             grpNotes.Controls.Add(lstNotes);
             grpNotes.Controls.Add(txtSearch);
+            grpNotes.Controls.Add(cmbCategory);
             grpNotes.Location = new Point(12, 65);
             grpNotes.Name = "grpNotes";
             grpNotes.Size = new Size(448, 1013);
@@ -50,9 +53,9 @@
             // lstNotes
             // 
             lstNotes.ContextMenuStrip = contextMenu;
-            lstNotes.Location = new Point(6, 139);
+            lstNotes.Location = new Point(6, 180);
             lstNotes.Name = "lstNotes";
-            lstNotes.Size = new Size(434, 865);
+            lstNotes.Size = new Size(434, 824);
             lstNotes.TabIndex = 2;
             lstNotes.MouseDown += lstNotes_MouseDown;
             // 
@@ -79,7 +82,7 @@
             // 
             // txtSearch
             // 
-            txtSearch.Location = new Point(8, 46);
+            txtSearch.Location = new Point(6, 117);
             txtSearch.Name = "txtSearch";
             txtSearch.PlaceholderText = "Pretraga";
             txtSearch.Size = new Size(434, 47);
@@ -120,7 +123,7 @@
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { TSExportHtml, TSExportMd, TSExportZip });
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { TSExportHtml, TSExportMd, TSExportZip, TSImportMd });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(87, 45);
             toolStripMenuItem1.Text = "File";
@@ -131,20 +134,36 @@
             TSExportHtml.Size = new Size(355, 54);
             TSExportHtml.Text = "Export HTML";
             TSExportHtml.Click += TSExportHtml_Click;
-            //
+            // 
             // TSExportMd
-            //
+            // 
             TSExportMd.Name = "TSExportMd";
             TSExportMd.Size = new Size(355, 54);
             TSExportMd.Text = "Export MD";
             TSExportMd.Click += TSExportMd_Click;
-            //
+            // 
             // TSExportZip
-            //
+            // 
             TSExportZip.Name = "TSExportZip";
             TSExportZip.Size = new Size(355, 54);
             TSExportZip.Text = "Export ZIP";
             TSExportZip.Click += TSExportZip_Click;
+            //
+            // TSImportMd
+            //
+            TSImportMd.Name = "TSImportMd";
+            TSImportMd.Size = new Size(355, 54);
+            TSImportMd.Text = "Uvezi .md";
+            TSImportMd.Click += TSImportMd_Click;
+            //
+            // cmbCategory
+            //
+            cmbCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbCategory.Location = new Point(6, 46);
+            cmbCategory.Name = "cmbCategory";
+            cmbCategory.Size = new Size(448, 49);
+            cmbCategory.TabIndex = 5;
+            cmbCategory.SelectedIndexChanged += cmbCategory_SelectedIndexChanged;
             // 
             // NoteForge
             // 
@@ -182,5 +201,7 @@
         private ToolStripMenuItem TSExportZip;
         private ToolStripMenuItem TSEdit;
         private ToolStripMenuItem TSDelete;
+        private ComboBox cmbCategory;
+        private ToolStripMenuItem TSImportMd;
     }
     }
