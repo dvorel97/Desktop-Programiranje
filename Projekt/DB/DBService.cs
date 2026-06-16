@@ -1,4 +1,4 @@
-﻿using Projekt.DB;
+using Projekt.DB;
 
 namespace Projekt.Services
 {
@@ -6,8 +6,8 @@ namespace Projekt.Services
     {
         public void SaveNote(Note note)
         {
-            using var noteContext = new NoteContext();
-            noteContext.Notes.Add(new NoteEntity
+            using var ctx = new NoteContext();
+            ctx.Notes.Add(new NoteEntity
             {
                 Id = note.Id,
                 Title = note.Title,
@@ -16,28 +16,28 @@ namespace Projekt.Services
                 Created = note.Created,
                 Modified = note.LastModified,
             });
-            noteContext.SaveChanges();
+            ctx.SaveChanges();
         }
 
         public void DeleteNote(string id)
         {
-            using var noteContext = new NoteContext();
-            var entity = noteContext.Notes.Find(id);
+            using var ctx = new NoteContext();
+            var entity = ctx.Notes.Find(id);
             if (entity == null) return;
-            noteContext.Notes.Remove(entity);
-            noteContext.SaveChanges();
+            ctx.Notes.Remove(entity);
+            ctx.SaveChanges();
         }
 
         public void UpdateNote(Note note)
         {
-            using var noteContext = new NoteContext();
-            var entity = noteContext.Notes.Find(note.Id);
+            using var ctx = new NoteContext();
+            var entity = ctx.Notes.Find(note.Id);
             if (entity == null) return;
             entity.Title = note.Title;
             entity.Content = note.Content ?? "";
             entity.Type = note.Type.ToString();
             entity.Modified = note.LastModified;
-            noteContext.SaveChanges();
+            ctx.SaveChanges();
         }
 
         public List<Note> LoadNotes()
@@ -58,7 +58,6 @@ namespace Projekt.Services
                     entity.Content ?? "",
                     type
                 );
-                note.Content = entity.Content ?? "";
                 notes.Add(note);
             }
             return notes;

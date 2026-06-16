@@ -1,33 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
-using System.Xml;
+using System;
 using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 using Projekt.Services;
 
 namespace Projekt
 {
     public class MarkdownNote : Note
     {
-        public MarkdownNote(string id, string title,
-            string content = "", NoteType type = NoteType.Personal,
+        public MarkdownNote(
+            string id, 
+            string title,
+            string content = "", 
+            NoteType type = NoteType.Default,
             string[] tags = null)
             : base(id, title, content, type, tags) { }
 
         public MarkdownNote() : base(
-            Guid.NewGuid().ToString(), "", "", NoteType.Personal, null)
+            Guid.NewGuid().ToString(), "", "", NoteType.Default, null)
         { }
 
         public override string GeneratePreview()
         {
-            string plain = Services.MDParser.Plain(content ?? "");
+            string plain = MDParser.Plain(content ?? "");
             return plain.Length > 150 ? plain[..150] + "..." : plain;
         }
 
         public override string ExportToHTML()
         {
-            return $"<h1>{Title}</h1><p>{MDParser.HTML(content)}</p>";
+            return MDParser.HTML(content);
         }
 
         public override string ExportToTXT()
@@ -37,13 +38,10 @@ namespace Projekt
 
         public override string ExportToXML()
         {
-            XmlSerializer xs = new XmlSerializer(typeof(Note));
-
-            using (StringWriter sw = new StringWriter())
-            {
-                xs.Serialize(sw, this);
-                return sw.ToString();
-            }
+            XmlSerializer xs = new XmlSerializer(typeof(MarkdownNote));
+            using StringWriter sw = new StringWriter();
+            xs.Serialize(sw, this);
+            return sw.ToString();
         }
     }
 }

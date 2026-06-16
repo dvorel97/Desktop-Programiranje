@@ -15,10 +15,13 @@ namespace Projekt
             repository.OnNoteModified += OnNoteModified;
         }
 
-        NoteRepository<Note>.NoteModifiedHandler OnNoteModified => (note, action) =>
+        private void OnNoteModified(Note note, string action)
         {
-            RefreshNoteList();
-        };
+            if (lstNotes.InvokeRequired)
+                lstNotes.Invoke(RefreshNoteList);
+            else
+                RefreshNoteList();
+        }
         private void EditNote(object sender, EventArgs e)
         {
             if (lstNotes.SelectedItem is not Note note) return;

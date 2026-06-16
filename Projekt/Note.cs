@@ -1,11 +1,8 @@
 ﻿using Projekt.Services;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
-using System.IO;
 
 namespace Projekt
 {
@@ -48,31 +45,11 @@ namespace Projekt
             Guid.NewGuid().ToString(),
             "",
             "",
-            NoteType.Personal,
+            NoteType.Default,
             null){ }
 
-        public virtual string GeneratePreview()
-        {
-            if (content == null) return string.Empty;
-            return content.Length > 150
-                ? content[..150] + "..."
-                : content;
-        }
 
-        public string FormatMetadata()
-        {
-            int words = content?.Split(' ',
-                StringSplitOptions.RemoveEmptyEntries).Length ?? 0;
-            return $"Izmijenjeno: {LastModified:dd.MM.yyyy HH:mm}  |  " +
-                   $"Rijeci: {words}  |  " +
-                   $"Tagovi: {string.Join(", ", Tags)}";
-        }
-
-        public override string ToString()
-        {
-            return Title;
-        }
-
+        public abstract string GeneratePreview();
         public abstract string ExportToHTML();
         public abstract string ExportToTXT();
         public abstract string ExportToXML();

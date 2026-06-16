@@ -8,7 +8,6 @@ namespace Projekt
         private List<T> notes = new();
         private Dictionary<string, List<T>> notesByTag = new();
         private HashSet<string> uniqueTags = new();
-        private SortedList<DateTime, T> notesByDate = new();
         private readonly ReaderWriterLockSlim _searchLock = new();
         private readonly ReaderWriterLockSlim _indexLock = new();
 
@@ -22,7 +21,6 @@ namespace Projekt
             try
             {
                 notes.Add(note);
-                notesByDate.Add(note.LastModified, note);
                 foreach (var tag in note.Tags)
                 {
                     if (!notesByTag.ContainsKey(tag))
@@ -50,10 +48,6 @@ namespace Projekt
             {
                 notes.Remove(note);
 
-                var key = notesByDate.Keys.FirstOrDefault(k => notesByDate[k].Id == note.Id);
-                if (key != default)
-                    notesByDate.Remove(key);
-
                 foreach (var tag in note.Tags)
                 {
                     if (notesByTag.ContainsKey(tag))
@@ -76,14 +70,6 @@ namespace Projekt
 
         public void Update(T note)
         {
-            var key = notesByDate.Keys.FirstOrDefault(k => notesByDate[k].Id == note.Id);
-            if (key != default)
-                notesByDate.Remove(key);
-
-            while (notesByDate.ContainsKey(note.LastModified))
-                note.LastModified = note.LastModified.AddTicks(1);
-            notesByDate.Add(note.LastModified, note);
-
             foreach (var tag in notesByTag.Keys.ToList())
             {
                 notesByTag[tag].Remove(note);
@@ -126,7 +112,7 @@ namespace Projekt
 
                             if (titleMatches > 0)
                                 results.Add(new SearchResult(note, "Title", titleMatches));
-                            else if (contentMatches > 0)
+                            if (contentMatches > 0)
                                 results.Add(new SearchResult(note, "Content", contentMatches));
                         }
                     }
@@ -211,6 +197,5 @@ namespace Projekt
         public event NoteModifiedHandler OnNoteModified;
         public IReadOnlyDictionary<string, List<T>> NotesByTag => notesByTag;
         public IReadOnlySet<string> UniqueTags => uniqueTags;
-        public IReadOnlyList<T> NotesByDate => notesByDate.Values.ToList();
     }
 }

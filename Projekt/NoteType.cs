@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Projekt
 {
     public enum NoteType
@@ -13,5 +9,4 @@ namespace Projekt
         Project,
         Default
     }
-
 }
